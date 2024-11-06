@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/globar/navbar";
+import { Navbar } from "@/components/global/navbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
