@@ -9,6 +9,8 @@ import {
   YourRoleIcon,
 } from "@/icons/client-reg-icons";
 import { FC } from "react";
+import { ClientRegForm } from "./_components/form/client-reg-form";
+import { StepBar } from "./_components/step-bar";
 import { StepDetails } from "./_components/step-details";
 
 const steps = [
@@ -58,25 +60,36 @@ const ClientRegistrationPage: FC = () => {
           your client account and accessing your personalized portal.
         </p>
       </div>
-      <div className="">
-        {/* Steps */}
-        <div className="">
-          {steps.map((step) => (
-            <StepDetails
-              key={step.id}
-              {...step}
-              active={currentStep === step.id}
-            />
-          ))}
-        </div>
-        {/* Forms */}
-        <div className="">
-          <p onClick={() => setCurrentStep(2)}>Form 1</p>
-          <p>Form 2</p>
-          <p>Form 3</p>
-          <p>Form 4</p>
-          <p>Form 5</p>
-        </div>
+      <div className="min-h-screen">
+        <form className="">
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-4 w-full">
+            {/* Steps Bar */}
+            <div className="flex flex-col items-start justify-start gap-2 ">
+              <div className="flex w-full gap-2 lg:hidden">
+                {steps.map((step) => (
+                  <StepBar
+                    key={step.id}
+                    active={Number(step.id) <= currentStep}
+                  />
+                ))}
+              </div>
+              {/* Steps */}
+              <div className="w-full space-y-4 lg:space-y-4 lg:border-r lg:border-gray-300 lg:pr-4">
+                {steps.map((step) => (
+                  <StepDetails
+                    key={step.id}
+                    {...step}
+                    active={currentStep === step.id}
+                  />
+                ))}
+              </div>
+            </div>
+            {/* Forms */}
+            <div className="">
+              <ClientRegForm />
+            </div>
+          </div>
+        </form>
       </div>
     </MaxWidthWrapper>
   );
