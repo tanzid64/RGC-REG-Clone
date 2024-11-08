@@ -1,15 +1,16 @@
-'use client';
-import { useClientReg } from '@/hooks/use-client-reg';
-import { FC } from 'react';
-import { StepOneForm } from './step-one-form';
+"use client";
+import { useAuthContextHook } from "@/providers/client-reg-context";
+import { FC } from "react";
+import { StepOneForm } from "./step-one-form";
 
 interface ClientRegFormProps {}
 
-export const ClientRegForm: FC<ClientRegFormProps> = ({}) => {
-  const {currentStep} = useClientReg();
+export const ClientRegForm: FC<ClientRegFormProps> = () => {
+  const { currentStep } = useAuthContextHook();
+
   switch (currentStep) {
     case 1:
-      return <StepOneForm/>
+      return <StepOneForm />;
     case 2:
       return <div>Step 2</div>;
     case 3:
@@ -17,6 +18,6 @@ export const ClientRegForm: FC<ClientRegFormProps> = ({}) => {
     case 4:
       return <div>Step 4</div>;
     default:
-      return <StepOneForm />;
+      return <div className="">sept 1</div>;
   }
 };

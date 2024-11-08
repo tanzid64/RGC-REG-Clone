@@ -25,25 +25,42 @@ const passwordValidation = new RegExp(
 export const clientRegSchema = z
   .object({
     // step -1
-    service: z.string().min(1, { message: "Service is required" }),
-    serviceSkill: z.array(z.string()),
-    country: z.string().min(1, { message: "Country is required" }),
+    service: z
+      .string({ required_error: "Service is required" })
+      .min(1, { message: "Service is required" }),
+    serviceSkill: z.array(z.string(), {
+      required_error: "Skill is required",
+    }),
+    country: z
+      .string({ required_error: "Country is required" })
+      .min(1, { message: "Country is required" }),
     // step -2
     companyLogo: z.string(),
-    companyName: z.string().min(1, { message: "Company name is required" }),
-    companySize: z.string().min(1, { message: "Company size is required" }),
-    industry: z.string().min(1, { message: "Industry is required" }),
+    companyName: z
+      .string({ required_error: "Company name is required" })
+      .min(1, { message: "Company name is required" }),
+    companySize: z
+      .string({ required_error: "Company size is required" })
+      .min(1, { message: "Company size is required" }),
+    industry: z
+      .string({ required_error: "Industry is required" })
+      .min(1, { message: "Industry is required" }),
     // step -3
     avatar: z.string(),
-    fullName: z.string().min(1, { message: "Your name is required" }),
+    fullName: z
+      .string({ required_error: "Your name is required" })
+      .min(1, { message: "Your name is required" }),
     position: z
-      .string()
+      .string({ required_error: "Your position in the company is required" })
       .min(1, { message: "Your position in the company is required" }),
     // step -4
-    email: z.string().email().min(1, { message: "Email is required" }),
+    email: z
+      .string({ required_error: "Email is required" })
+      .email({ message: "Invalid email address" })
+      .min(1, { message: "Email is required" }),
     phoneNumber: z.string(),
     password: z
-      .string()
+      .string({ required_error: "Password is required" })
       .min(8, { message: "Password must be at least 8 characters" })
       .regex(passwordValidation, {
         message:
