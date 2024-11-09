@@ -2,6 +2,7 @@
 import { useAuthContextHook } from "@/providers/client-reg-context";
 import { FC } from "react";
 import { StepOneForm } from "./step-one-form";
+import { StepThreeForm } from "./step-three-form";
 import { StepTwoForm } from "./step-two-form";
 
 interface ClientRegFormProps {}
@@ -15,7 +16,7 @@ export const ClientRegForm: FC<ClientRegFormProps> = () => {
     case 2:
       return <StepTwoForm />;
     case 3:
-      return <div>Step 3</div>;
+      return <StepThreeForm />;
     case 4:
       return <div>Step 4</div>;
     default:

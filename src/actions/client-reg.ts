@@ -65,6 +65,7 @@ export async function getSkillsUnderService(serviceId: string) {
     };
   }
 }
+
 export async function getAllIndustries() {
   // Get all industries list
   try {
@@ -94,6 +95,39 @@ export async function getAllIndustries() {
       status: 500,
       message: "Internal server error",
       industries: [],
+    };
+  }
+}
+
+export async function getAllJobPosition() {
+  // Get all job position list
+  try {
+    const positions = await db.jobPosition.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      select: {
+        id: true,
+        title: true,
+      },
+    });
+    if (positions.length < 1) {
+      return {
+        status: 404,
+        message: "No job position found",
+        positions,
+      };
+    }
+    return {
+      status: 200,
+      positions,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Internal server error",
+      positions: [],
     };
   }
 }
