@@ -67,7 +67,7 @@ export const StepThreeForm: FC = () => {
             control={control}
             options={positionsOptions}
             placeholder="Select an industry..."
-            name="industry"
+            name="position"
             isLoading={positionsLoading}
           />
 

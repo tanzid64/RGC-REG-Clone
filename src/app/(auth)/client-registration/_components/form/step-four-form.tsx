@@ -98,6 +98,7 @@ export const StepFourForm: FC = () => {
             register={register}
             placeholder="Re-type your password"
           />
+          <ErrorMessage errors={errors} name="confirmPassword" />
         </div>
         {/* Terms & Conditions */}
         <div className="flex items-center">

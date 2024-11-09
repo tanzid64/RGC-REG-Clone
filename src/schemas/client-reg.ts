@@ -45,7 +45,7 @@ export const clientRegSchema = z
       .string({ required_error: "Industry is required" })
       .min(1, { message: "Industry is required" }),
     // step -3
-    avatar: z.string(),
+    avatar: z.any().optional(),
     fullName: z
       .string({ required_error: "Your name is required" })
       .min(1, { message: "Your name is required" }),

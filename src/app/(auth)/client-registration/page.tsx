@@ -2,6 +2,7 @@ import { MaxWidthWrapper } from "@/components/global/max-width-wrapper";
 import { FC } from "react";
 import { ClientRegStep } from "./_components/form/client-reg-form-step";
 import ClientRegFormProvider from "./_components/form/form-provider";
+import { AuthContextProvider } from "@/providers/client-reg-context";
 
 const ClientRegistrationPage: FC = () => {
   return (
@@ -17,9 +18,11 @@ const ClientRegistrationPage: FC = () => {
         </p>
       </div>
       <div className="min-h-screen">
-        <ClientRegFormProvider>
-          <ClientRegStep />
-        </ClientRegFormProvider>
+        <AuthContextProvider>
+          <ClientRegFormProvider>
+            <ClientRegStep />
+          </ClientRegFormProvider>
+        </AuthContextProvider>
       </div>
     </MaxWidthWrapper>
   );
