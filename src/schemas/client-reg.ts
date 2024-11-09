@@ -1,23 +1,5 @@
 import { z } from "zod";
 
-export interface clientRegProps {
-  service: string;
-  serviceSkill: string[];
-  country: string;
-  companyLogo: string;
-  companyName: string;
-  companySize: "<10" | "11-50" | "51-100" | "101-500" | "501-1000" | "1000+";
-  industry: string;
-  avatar: string;
-  fullName: string;
-  position: string;
-  phoneNumber: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  acceptTerms: boolean;
-}
-
 const passwordValidation =
   /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
 
@@ -72,3 +54,5 @@ export const clientRegSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export type ClientRegProps = z.infer<typeof clientRegSchema>;

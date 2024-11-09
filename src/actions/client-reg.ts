@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/prisma";
+import { ClientRegProps } from "@/schemas/client-reg";
 
 export async function getServices() {
   // Get all services list
@@ -132,22 +133,86 @@ export async function getAllJobPosition() {
   }
 }
 
-export async function uniqueEmail(email: string) {
+export async function onClientRegistration(data: ClientRegProps) {
   try {
-    const emailExists = await db.user.findUnique({
+    // validate unique email
+    const existingEmail = await db.user.findUnique({
       where: {
-        email,
+        email: data.email,
       },
     });
-    if (emailExists) {
+
+    if (existingEmail) {
       return {
         status: 409,
         message: "Email already exists",
       };
     }
+
+    // validate unique Phone number
+    const existingPhoneNumber = await db.user.findUnique({
+      where: {
+        phone: data.phoneNumber,
+      },
+    });
+
+    if (existingPhoneNumber) {
+      return {
+        status: 409,
+        message: "Phone number already exists",
+      };
+    }
+    // create company
+    const company = await db.company.create({
+      data: {
+        name: data.companyName,
+        size: data.companySize,
+        industryId: data.industry,
+        logo: data.companyLogo || "",
+      },
+    });
+
+    // validate company creation
+    if (!company) {
+      return {
+        status: 500,
+        message: "An error occured while creating company",
+      };
+    }
+
+    // Create user with proper data
+    const user = await db.user.create({
+      data: {
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
+        phone: data.phoneNumber,
+        jobPositionId: data.position,
+        companyId: company.id,
+        serviceId: data.service,
+        avatar: data.avatar || "",
+      },
+    });
+
+    // TODO: Create OTP & Send it to user's email
+
+    // validate user creation
+    if (!user) {
+      // delete company if user creation fails
+      await db.company.delete({
+        where: {
+          id: company.id,
+        },
+      });
+      return {
+        status: 500,
+        message: "An error occured while creating user",
+      };
+    }
+
     return {
       status: 200,
-      message: "Email is unique",
+      message: "Registration successful. Check your email for OTP",
     };
   } catch (error) {
     console.log(error);

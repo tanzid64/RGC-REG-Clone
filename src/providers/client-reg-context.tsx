@@ -1,18 +1,17 @@
 "use client";
-import { clientRegSchema } from "@/schemas/client-reg";
+import { onClientRegistration } from "@/actions/client-reg";
+import { ClientRegProps, clientRegSchema } from "@/schemas/client-reg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { createContext, useContext, useState } from "react";
 import { SubmitHandler, useForm, UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-
-type FormData = z.infer<typeof clientRegSchema>; // Correct type for your form data
+import toast from "react-hot-toast";
 
 type AuthContextProps = {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   loading: boolean;
-  onHandleSubmit: SubmitHandler<FormData>; // This expects the form data, not the event
-  formMethods: UseFormReturn<FormData>; // UseFormReturn is the correct type for formMethods
+  onHandleSubmit: SubmitHandler<ClientRegProps>; // This expects the form data, not the event
+  formMethods: UseFormReturn<ClientRegProps>; // UseFormReturn is the correct type for formMethods
 };
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -25,7 +24,7 @@ export const AuthContextProvider = ({
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const formMethods = useForm<FormData>({
+  const formMethods = useForm<ClientRegProps>({
     resolver: zodResolver(clientRegSchema),
     defaultValues: {
       password: "",
@@ -34,9 +33,34 @@ export const AuthContextProvider = ({
     mode: "onBlur",
   });
 
-  const onHandleSubmit: SubmitHandler<FormData> = (data) => {
-    // setLoading(true);
-    console.log(data);
+  const onHandleSubmit: SubmitHandler<ClientRegProps> = async (data) => {
+    // Handle company logo upload
+    if (data.companyLogo.length > 0) {
+      // TODO: Upload company logo in a bucket and get the URL
+      data.companyLogo = "https://via.placeholder.com/300x300";
+    } else {
+      data.companyLogo = "";
+    }
+
+    // Handle avatar upload
+    if (data.avatar.length > 0) {
+      // TODO: Upload avatar in a bucket and get the URL
+      data.avatar = "https://via.placeholder.com/300x300";
+    } else {
+      data.avatar = "";
+    }
+
+    const response = await onClientRegistration(data);
+
+    if (response.status === 200) {
+      toast.success(response.message);
+      setLoading(false);
+      setCurrentStep(5);
+    } else {
+      toast.error(response.message);
+    }
+
+    //TODO: Handle OTP
   };
 
   const contextValue = {
