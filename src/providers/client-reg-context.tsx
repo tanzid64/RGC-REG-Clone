@@ -15,7 +15,7 @@ type InitialValueProps = {
 };
 
 const InitialValues: InitialValueProps = {
-  currentStep: 3,
+  currentStep: 4,
   setCurrentStep: () => undefined,
 };
 

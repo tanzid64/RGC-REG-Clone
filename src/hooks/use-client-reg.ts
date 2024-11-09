@@ -1,8 +1,6 @@
 "use client";
-import { getServices } from "@/actions/client-reg";
 import { clientRegSchema } from "@/schemas/client-reg";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,6 +11,10 @@ export const useClientReg = () => {
 
   const methods = useForm<z.infer<typeof clientRegSchema>>({
     resolver: zodResolver(clientRegSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
     mode: "onBlur",
   });
 
@@ -20,8 +22,6 @@ export const useClientReg = () => {
     // setLoading(true);
     console.log(data);
   });
-
-  
 
   return {
     currentStep,

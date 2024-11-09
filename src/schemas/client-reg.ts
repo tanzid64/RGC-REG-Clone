@@ -18,12 +18,8 @@ export interface clientRegProps {
   acceptTerms: boolean;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const ACCEPTED_FILE_TYPES = ["jpeg", "png", "gif", "webp", "jpg", "svg+xml"];
-
-const passwordValidation = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-);
+const passwordValidation =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
 
 export const clientRegSchema = z
   .object({
@@ -61,7 +57,7 @@ export const clientRegSchema = z
       .string({ required_error: "Email is required" })
       .email({ message: "Invalid email address" })
       .min(1, { message: "Email is required" }),
-    phoneNumber: z.string(),
+    phoneNumber: z.string().min(5, { message: "Phone number is required" }),
     password: z
       .string({ required_error: "Password is required" })
       .min(8, { message: "Password must be at least 8 characters" })

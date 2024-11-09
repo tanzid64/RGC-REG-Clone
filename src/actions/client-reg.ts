@@ -131,3 +131,29 @@ export async function getAllJobPosition() {
     };
   }
 }
+
+export async function uniqueEmail(email: string) {
+  try {
+    const emailExists = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (emailExists) {
+      return {
+        status: 409,
+        message: "Email already exists",
+      };
+    }
+    return {
+      status: 200,
+      message: "Email is unique",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Internal server error",
+    };
+  }
+}
