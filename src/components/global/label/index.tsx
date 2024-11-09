@@ -2,7 +2,7 @@ import { FC } from "react";
 
 interface LabelProps {
   htmlFor?: string;
-  children: React.ReactNode;
+  text: string;
   className?: string;
   required?: boolean;
 }
@@ -10,14 +10,17 @@ interface LabelProps {
 export const Label: FC<LabelProps> = ({
   htmlFor,
   className,
-  children,
+  text,
   required,
 }) => {
   return (
-    <label className="text-sm font-medium text-gray-700">
-      <div className="flex text-gray-700">
-        {children}
-        {required && <span className="text-red-500">*</span>}
+    <label
+      htmlFor="service"
+      className="appearance-none block text-sm font-medium text-gray-700"
+    >
+      <div className="flex">
+        <p>{text}</p>
+        <span className="text-red-500">{required ? "*" : ""}</span>
       </div>
     </label>
   );

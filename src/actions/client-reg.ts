@@ -65,3 +65,35 @@ export async function getSkillsUnderService(serviceId: string) {
     };
   }
 }
+export async function getAllIndustries() {
+  // Get all industries list
+  try {
+    const industries = await db.industry.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      select: {
+        id: true,
+        title: true,
+      },
+    });
+    if (industries.length < 1) {
+      return {
+        status: 404,
+        message: "No industries found",
+        industries,
+      };
+    }
+    return {
+      status: 200,
+      industries,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Internal server error",
+      industries: [],
+    };
+  }
+}

@@ -1,21 +1,20 @@
 "use client";
 import { getServices, getSkillsUnderService } from "@/actions/client-reg";
-import { ClientRegButton } from "@/components/global/buttons/client-reg-button";
+import { ClientRegButton } from "@/app/(auth)/client-registration/_components/client-reg-button";
+import { Label } from "@/components/global/label";
+import { Select } from "@/components/global/select";
 import { useQuery } from "@tanstack/react-query";
 import { Country } from "country-state-city";
 import { FC } from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import ReactSelect from "react-select";
+import { useFormContext } from "react-hook-form";
 import { ErrorMessage } from "../error-message";
-interface StepOneFormProps {}
 
-export const StepOneForm: FC<StepOneFormProps> = ({}) => {
+export const StepOneForm: FC = () => {
   const {
     control,
-    register,
     formState: { errors },
-    getValues,
     watch,
+    register,
   } = useFormContext();
   const countries = Country.getAllCountries();
 
@@ -52,106 +51,48 @@ export const StepOneForm: FC<StepOneFormProps> = ({}) => {
     <div className="space-y-4">
       {/* Services */}
       <div className="flex w-full flex-col gap-1">
-        <label
-          htmlFor=""
-          className="appearance-none block text-sm font-medium text-gray-700"
-        >
-          <div className="flex">
-            <p>What service do you need?</p>
-            <span className="text-red-500">*</span>
-          </div>
-        </label>
-
-        <Controller
+        <Label text="What service do you need?" htmlFor="service" required />
+        <Select
           control={control}
+          options={serviceOptions}
+          placeholder="Select a service..."
           name="service"
-          render={({ field: { onChange, onBlur, ref } }) => (
-            <ReactSelect
-              id="service"
-              onBlur={onBlur}
-              onChange={(selectedOption) => {
-                if (selectedOption) {
-                  onChange(selectedOption.value);
-                }
-              }}
-              placeholder="Select option"
-              options={serviceOptions}
-              ref={ref}
-              isLoading={servicesLoading}
-            />
-          )}
+          isLoading={servicesLoading}
         />
         <ErrorMessage errors={errors} name="service" />
       </div>
       {/* Service Skills */}
       {watch("service") && (
         <div className="flex w-full flex-col gap-1">
-          <label
+          <Label
+            text="What are you particularly looking for?"
+            required
             htmlFor="serviceSkill"
-            className="appearance-none block text-sm font-medium text-gray-700"
-          >
-            <div className="flex">
-              <p>What are you particularly looking for?</p>
-              <span className="text-red-500">*</span>
-            </div>
-          </label>
-
-          <Controller
+          />
+          <Select
             control={control}
+            options={skillOptions}
+            placeholder="Select skills..."
+            isMulti={true}
             name="serviceSkill"
-            render={({ field: { onChange, onBlur, ref } }) => (
-              <ReactSelect
-                id="serviceSkill"
-                onBlur={onBlur}
-                onChange={(selectedOption) => {
-                  if (selectedOption) {
-                    onChange(selectedOption.map((s) => s.value));
-                  }
-                }}
-                placeholder="Select option"
-                options={skillOptions}
-                ref={ref}
-                isLoading={skillsLoading}
-                isMulti
-              />
-            )}
+            isLoading={skillsLoading}
           />
           <ErrorMessage errors={errors} name="serviceSkill" />
         </div>
       )}
       {/* Country */}
       <div className="flex w-full flex-col gap-1">
-        <label
-          htmlFor="country"
-          className="appearance-none block text-sm font-medium text-gray-700"
-        >
-          <div className="flex">
-            <p>Country</p>
-            <span className="text-red-500">*</span>
-          </div>
-        </label>
-
-        <Controller
+        <Label text="Country" htmlFor="country" required />
+        <Select
           control={control}
+          options={countryOptions}
+          placeholder="Select your country"
           name="country"
-          render={({ field: { onChange, onBlur, ref } }) => (
-            <ReactSelect
-              id="country"
-              onBlur={onBlur}
-              onChange={(selectedOption) => {
-                if (selectedOption) {
-                  onChange(selectedOption.value);
-                }
-              }}
-              placeholder="Select option"
-              options={countryOptions}
-              ref={ref}
-              isLoading={servicesLoading}
-            />
-          )}
+          isLoading={servicesLoading}
         />
         <ErrorMessage errors={errors} name="country" />
       </div>
+
       {/* Button */}
       <ClientRegButton
         disabled={

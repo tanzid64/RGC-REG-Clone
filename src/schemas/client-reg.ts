@@ -18,6 +18,9 @@ export interface clientRegProps {
   acceptTerms: boolean;
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const ACCEPTED_FILE_TYPES = ["jpeg", "png", "gif", "webp", "jpg", "svg+xml"];
+
 const passwordValidation = new RegExp(
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 );
@@ -35,7 +38,7 @@ export const clientRegSchema = z
       .string({ required_error: "Country is required" })
       .min(1, { message: "Country is required" }),
     // step -2
-    companyLogo: z.string(),
+    companyLogo: z.any().optional(),
     companyName: z
       .string({ required_error: "Company name is required" })
       .min(1, { message: "Company name is required" }),
