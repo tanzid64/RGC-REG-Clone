@@ -24,6 +24,6 @@ export const ClientRegForm: FC<ClientRegFormProps> = () => {
     case 5:
       return <StepFiveForm />;
     default:
-      return <div className="">sept 1</div>;
+      return <StepOneForm />;
   }
 };

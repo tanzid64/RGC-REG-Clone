@@ -5,6 +5,7 @@ const page: FC = () => {
   return(
     <div className=''>
       <Link href='/'>Home</Link>
+      <br />
       <Link href='/client-registration'>Client Registration</Link>
     </div>
   );

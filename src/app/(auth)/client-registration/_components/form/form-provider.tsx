@@ -1,5 +1,4 @@
 "use client";
-import { Loader } from "@/components/global/loader";
 import { useAuthContextHook } from "@/providers/client-reg-context";
 import dynamic from "next/dynamic";
 import { Control, FieldValues, FormProvider } from "react-hook-form";
@@ -21,9 +20,7 @@ const ClientRegFormProvider: React.FC<Props> = ({ children }) => {
     <FormProvider {...formMethods}>
       <form onSubmit={formMethods.handleSubmit(onHandleSubmit)}>
         <div className="flex w-full flex-col gap-8 lg:flex-row lg:gap-4">
-          <Loader state={loading} color="blue">
-            {children}
-          </Loader>
+          {children}
         </div>
       </form>
       <DevT control={formMethods.control as unknown as Control<FieldValues>} />
