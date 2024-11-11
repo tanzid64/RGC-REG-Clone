@@ -1,5 +1,8 @@
 "use server";
 
+import bcryptjs from "bcryptjs";
+
+import sendEmail from "@/lib/nodemailer";
 import db from "@/lib/prisma";
 import { ClientRegProps } from "@/schemas/client-reg";
 
@@ -180,11 +183,14 @@ export async function onClientRegistration(data: ClientRegProps) {
       };
     }
 
+    // Hash password
+    const hashedPassword = await bcryptjs.hash(data.password, 10);
+
     // Create user with proper data
     const user = await db.user.create({
       data: {
         email: data.email,
-        password: data.password,
+        password: hashedPassword,
         fullName: data.fullName,
         phone: data.phoneNumber,
         jobPositionId: data.position,
@@ -195,6 +201,14 @@ export async function onClientRegistration(data: ClientRegProps) {
     });
 
     // TODO: Create OTP & Send it to user's email
+    // Generate Otp
+    const otp = await db.otp.create({
+      data: {
+        userId: user.id,
+        otp: String(Math.floor(100000 + Math.random() * 900000)),
+        expiredAt: new Date(Date.now() + 300000),
+      },
+    });
 
     // validate user creation
     if (!user) {
@@ -210,9 +224,71 @@ export async function onClientRegistration(data: ClientRegProps) {
       };
     }
 
+    // Send otp through email
+    const emailBody = `<h1>Dear ${user.fullName},</h1>
+    <p> Your registration is successful. Please use the following OTP to complete your registration:</p>
+    <h2>${otp.otp}</h2>
+    `;
+    const emailSent = await sendEmail(
+      user.email,
+      "RGC Registration verification",
+      emailBody,
+    );
+
     return {
       status: 200,
       message: "Registration successful. Check your email for OTP",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message: "Internal server error",
+    };
+  }
+}
+
+export async function onOTPVerification(otp: string) {
+  try {
+    const existingOtp = await db.otp.findUnique({
+      where: {
+        otp,
+      },
+    });
+
+    if (!existingOtp) {
+      return {
+        status: 404,
+        message: "Invalid OTP",
+      };
+    }
+
+    if (existingOtp.expiredAt < new Date()) {
+      return {
+        status: 404,
+        message: "OTP has expired",
+      };
+    }
+
+    const user = await db.user.update({
+      where: {
+        id: existingOtp.userId,
+      },
+      data: {
+        isVerified: true,
+      },
+    });
+
+    if (!user) {
+      return {
+        status: 404,
+        message: "User not found",
+      };
+    }
+
+    return {
+      status: 200,
+      message: "Email verification successful",
     };
   } catch (error) {
     console.log(error);

@@ -60,30 +60,29 @@ model JobPosition {
 // One user must have a company
 // One user must have a service
 model User {
-  id       String  @id @default(cuid())
-  fullName String
-  email    String  @unique
-  phone    String  @unique
-  avatar   String?
-  password String
-
+  id            String      @id @default(cuid())
+  fullName      String
+  email         String      @unique
+  phone         String      @unique
+  avatar        String?
+  password      String
   jobPositionId String
   jobPosition   JobPosition @relation(fields: [jobPositionId], references: [id])
-
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  companyId     String
+  company       Company     @relation(fields: [companyId], references: [id])
+  serviceId     String
+  service       Service     @relation(fields: [serviceId], references: [id])
+  isVerified    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  otps          Otp[]
 }
 
 model Otp {
   id        String   @id @default(cuid())
-  otp       String
+  otp       String   @unique
   createdAt DateTime @default(now())
   expiredAt DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-

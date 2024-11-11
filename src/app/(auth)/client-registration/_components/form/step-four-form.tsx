@@ -1,6 +1,9 @@
+"use client";
 import { Input } from "@/components/global/input";
 import { Label } from "@/components/global/label";
+import { Loader } from "@/components/global/loader";
 import { PasswordInput } from "@/components/global/password-input";
+import { useAuthContextHook } from "@/providers/client-reg-context";
 import Link from "next/link";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
@@ -41,8 +44,9 @@ export const StepFourForm: FC = () => {
     formState: { errors },
     watch,
     register,
-    setValue,
+    getFieldState,
   } = useFormContext();
+  const { loading } = useAuthContextHook();
 
   // Check if all password requirements are met
   const isPasswordValid = PasswordRequirements.every((req) =>
@@ -56,6 +60,7 @@ export const StepFourForm: FC = () => {
         <div className="flex w-full flex-col gap-1">
           <Label htmlFor="email" text="Business Email" required />
           <Input
+            type="email"
             register={register}
             name="email"
             placeholder="Enter your company email"
@@ -98,6 +103,7 @@ export const StepFourForm: FC = () => {
             register={register}
             placeholder="Re-type your password"
           />
+
           <ErrorMessage errors={errors} name="confirmPassword" />
         </div>
         {/* Terms & Conditions */}
@@ -144,7 +150,9 @@ export const StepFourForm: FC = () => {
           }
           className="h-fit inline-flex items-center rounded-md shadow-sm text-neutral-50 px-4 py-2 text-sm font-semibold w-full justify-center disabled:cursor-not-allowed disabled:bg-violet-300 hover:bg-violet-700 bg-violet-600/80 cursor-pointer"
         >
-          Create Account
+          <Loader state={loading} color="red">
+            Create Account
+          </Loader>
         </button>
       </div>
     </>

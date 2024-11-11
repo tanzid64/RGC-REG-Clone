@@ -10,8 +10,8 @@ type AuthContextProps = {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   loading: boolean;
-  onHandleSubmit: SubmitHandler<ClientRegProps>; // This expects the form data, not the event
-  formMethods: UseFormReturn<ClientRegProps>; // UseFormReturn is the correct type for formMethods
+  onHandleSubmit: SubmitHandler<ClientRegProps>;
+  formMethods: UseFormReturn<ClientRegProps>;
 };
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -21,19 +21,19 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [currentStep, setCurrentStep] = useState<number>(4);
   const [loading, setLoading] = useState<boolean>(false);
 
   const formMethods = useForm<ClientRegProps>({
     resolver: zodResolver(clientRegSchema),
     defaultValues: {
       password: "",
-      confirmPassword: "",
     },
-    mode: "onBlur",
+    mode: "all",
   });
 
   const onHandleSubmit: SubmitHandler<ClientRegProps> = async (data) => {
+    setLoading(true);
     // Handle company logo upload
     if (data.companyLogo.length > 0) {
       // TODO: Upload company logo in a bucket and get the URL
@@ -50,6 +50,7 @@ export const AuthContextProvider = ({
       data.avatar = "";
     }
 
+
     const response = await onClientRegistration(data);
 
     if (response.status === 200) {
@@ -57,10 +58,9 @@ export const AuthContextProvider = ({
       setLoading(false);
       setCurrentStep(5);
     } else {
+      setLoading(false);
       toast.error(response.message);
     }
-
-    //TODO: Handle OTP
   };
 
   const contextValue = {

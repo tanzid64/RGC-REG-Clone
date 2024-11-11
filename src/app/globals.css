@@ -2,4 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.input {
+  @apply appearance-none block w-[40px] text-sm rounded-md text-gray-700 border border-gray-300 p-3 placeholder-gray-400 shadow-sm focus:border-2 focus:border-violet-500 focus:outline-none focus:ring-violet-500 active:border-violet-500 cursor-text;
+}
